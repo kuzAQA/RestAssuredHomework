@@ -6,7 +6,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 
-
 public class RestTests extends TestBase {
     String emailAndPass = "{\"email\": \"eve.holt@reqres.in\",\"password\": \"123123\"}";
     String testEmail = "{\"email\": \"sydn123ey@fife\"}";
