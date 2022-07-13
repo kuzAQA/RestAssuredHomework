@@ -3,28 +3,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 
-public class RestTests {
+
+public class RestTests extends TestBase {
     String emailAndPass = "{\"email\": \"eve.holt@reqres.in\",\"password\": \"123123\"}";
-    String nameAndJob = "{\"name\": \"TestUser\",\"job\": \"Chill\"}";
     String testEmail = "{\"email\": \"sydn123ey@fife\"}";
-    String URLApi = "https://reqres.in/api";
 
     @Test
     @DisplayName("Создание пользователя")
     void createUserTest() {
+        String nameAndJob = "{\"name\": \"TestUser\",\"job\": \"Chill\"}";
         given()
                 .log().uri()
                 .body(nameAndJob)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(URLApi + "/users/2")
+                .post("/users/2")
                 .then()
                 .log().body()
+                .statusCode(201)
                 .body("name", is("TestUser"))
-                .body("job", is("Chill"))
-                .statusCode(201);
+                .body("job", is("Chill"));
     }
 
     @Test
@@ -33,12 +34,12 @@ public class RestTests {
         given()
                 .log().uri()
                 .when()
-                .get(URLApi + "/users/10")
+                .get("/users/10")
                 .then()
                 .log().body()
+                .statusCode(200)
                 .body("data.first_name", is("Byron"))
-                .body("data.last_name", is("Fields"))
-                .statusCode(200);
+                .body("data.last_name", is("Fields"));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class RestTests {
         given()
                 .log().uri()
                 .when()
-                .delete(URLApi + "/users/2")
+                .delete("/users/2")
                 .then()
                 .statusCode(204);
     }
@@ -55,16 +56,17 @@ public class RestTests {
     @Test
     @DisplayName("Успешная авторизация")
     void loginTest() {
+        String token = "";
         given()
                 .log().uri()
                 .body(emailAndPass)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(URLApi + "/login")
+                .post("/login")
                 .then()
                 .log().body()
-                .body("token", is("QpwL5tke4Pnpja7X4"))
-                .statusCode(200);
+                .statusCode(200)
+                .body("token", is(notNullValue()));
     }
 
     @Test
@@ -75,11 +77,11 @@ public class RestTests {
                 .body(emailAndPass)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(URLApi + "/register")
+                .post("/register")
                 .then()
+                .statusCode(200)
                 .log().body()
-                .body("token", is("QpwL5tke4Pnpja7X4"))
-                .statusCode(200);
+                .body("token", is(notNullValue()));
     }
 
     @Test
@@ -90,26 +92,26 @@ public class RestTests {
                 .body(testEmail)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(URLApi + "/login")
+                .post("/login")
                 .then()
                 .log().body()
-                .body("error", is("Missing password"))
-                .statusCode(400);
+                .statusCode(400)
+                .body("error", is("Missing password"));
     }
 
     @Test
-    @DisplayName("Неспешная регистрация")
+    @DisplayName("Неуспешная регистрация")
     void unsuccessfulRegisterUserTest() {
         given()
                 .log().uri()
                 .body(testEmail)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(URLApi + "/register")
+                .post("/register")
                 .then()
                 .log().body()
-                .body("error", is("Missing password"))
-                .statusCode(400);
+                .statusCode(400)
+                .body("error", is("Missing password"));
     }
 
 }

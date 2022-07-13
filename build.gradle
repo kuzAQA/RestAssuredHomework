@@ -8,8 +8,8 @@ repositories {
 
 dependencies {
     testImplementation(
-            'io.rest-assured:rest-assured:5.1.1',
             'org.junit.jupiter:junit-jupiter:5.8.2',
+            'io.rest-assured:rest-assured:5.1.1',
             'org.slf4j:slf4j-simple:1.7.36',
             'com.google.code.gson:gson:2.9.0',
             'com.googlecode.json-simple:json-simple:1.1.1'
